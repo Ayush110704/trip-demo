@@ -1,9 +1,9 @@
 // App.jsx
 import React, { useState } from 'react';
-import AddTrip from './components/AddTrip';
-import TripList from './components/TripList';
-import TripSummary from './components/TripSummary';
-import Itinerary from './components/Itinerary'; 
+import AddTrip from './AddTrip';
+import TripList from './TripList';
+import TripSummary from './TripSummary';
+import Itinerary from './Itinerary'; 
 
 function App() {
   const [selectedTrip, setSelectedTrip] = useState(null);
