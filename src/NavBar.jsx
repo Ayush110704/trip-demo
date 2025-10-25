@@ -1,8 +1,10 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router';
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { FiMenu, FiX } from "react-icons/fi";
 
 export default function NavBar() {
-  const location = useLocation();
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleMenu = () => setIsOpen(!isOpen);
 
   const navItems = [
     { path: '/add-trip', label: 'Add Trip' },
@@ -12,29 +14,53 @@ export default function NavBar() {
   ];
 
   return (
-    <nav className="  shadow-lg rounded-2xl mb-8 border border-gray-200 ">
-      <div className="px-4">
-        <div className="flex  gap-10 justify-between items-center py-4">
-          <div className="text-2xl font-bold text-blue-700 mb-4 sm:mb-0">
-            TripPlanner
-          </div>
-          <div className="flex flex-wrap justify-center gap-1 sm:gap-2 ">
-            {navItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`px-3 sm:px-4 py-2 rounded-lg transition-all text-white duration-200 text-sm sm:text-base ${
-                  location.pathname === item.path
-                    ? 'bg-blue-600 text-white shadow-md'
-                    : 'text-gray-700 hover:bg-blue-100 hover:text-blue-700'
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
+    <nav className="shadow-lg rounded-2xl mb-8 border border-gray-200">
+      <div className="px-4 py-4 flex items-center gap-10 justify-between">
+        {/* Logo */}
+        <h1 className="text-2xl font-bold text-blue-700">
+          TripPlanner
+        </h1>
+
+        {/* Desktop Links */}
+        <div className="hidden md:flex gap-8 text-lg text-white">
+          {navItems.map((item) => (
+            <Link 
+              key={item.path} 
+              to={item.path} 
+              className="hover:text-black transition hover:bg-white  rounded-md"
+            >
+              {item.label}
+            </Link>
+          ))}
         </div>
+
+        {/* Mobile Menu Button */}
+        <button
+          onClick={toggleMenu}
+          className="md:hidden text-white focus:outline-none"
+        >
+          {isOpen ? <FiX size={28} /> : <FiMenu size={28} />}
+        </button>
       </div>
+
+      {/* Mobile Menu */}
+      {isOpen && (
+        <div className="md:hidden bg-gray-200 shadow-lg rounded-b-xl">
+          <ul className="flex flex-col items-center py-4 space-y-4 text-md text-white">
+            {navItems.map((item) => (
+              <li key={item.path}>
+                <Link
+                  to={item.path}
+                  onClick={() => setIsOpen(false)}
+                  className="hover:text-blue-600 transition"
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </nav>
   );
 }
