@@ -1,4 +1,3 @@
-// Itinerary.jsx
 import React, { useState, useEffect } from 'react';
 
 export default function Itinerary({ selectedTrip }) {
@@ -34,34 +33,38 @@ export default function Itinerary({ selectedTrip }) {
 
   if (!selectedTrip) {
     return (
-      <div className="bg-white shadow-md border rounded-2xl p-5 mb-6">
-        <h2 className="text-xl font-semibold mb-4 text-blue-700">Itinerary</h2>
-        <p className="text-gray-700 italic">Select a trip to manage itinerary</p>
+      <div className="bg-transparent shadow-md border border-gray-200 rounded-2xl p-6 mb-6">
+        <h2 className="text-2xl font-semibold mb-4 text-blue-700">
+          Itinerary
+        </h2>
+        <p className="text-white italic text-center py-4">Select a trip to manage itinerary</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white shadow-md border rounded-2xl p-5 mb-6">
-      <h2 className="text-xl font-semibold mb-4 text-blue-700">Itinerary - {selectedTrip.name}</h2>
+    <div className="bg- shadow-md border border-gray-200 rounded-2xl p-6 mb-6">
+      <h2 className="text-2xl font-semibold mb-4 text-blue-700">
+        Itinerary - {selectedTrip.name}
+      </h2>
 
-      <div className="flex gap-2 mb-3">
+      <div className="flex flex-col sm:flex-row gap-3 mb-4">
         <input 
-          type="text" 
-          placeholder="Day" 
-          className="border rounded p-2 w-1/4" 
+          type ="text" 
+          placeholder ="Day"
+          className="text-white border border-gray-300 rounded-lg p-3 sm:w-1/4 focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
           value={day}
           onChange={(e) => setDay(e.target.value)}
         />
         <input 
           type="text" 
           placeholder="Activity Description" 
-          className="border rounded p-2 w-full" 
+          className="text-white border border-gray-300 rounded-lg p-3 flex-1 focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
         <button 
-          className="bg-green-600 hover:bg-green-700 text-white rounded px-4"
+          className="cursor-pointer bg-green-600 hover:bg-green-700 text-white rounded-lg px-6 py-3 font-semibold transition-all duration-200 shadow-md hover:shadow-lg"
           onClick={addActivity}
         >
           Add
@@ -69,15 +72,17 @@ export default function Itinerary({ selectedTrip }) {
       </div>
 
       {activities.length === 0 ? (
-        <p className="text-gray-700 italic">No activities added yet.</p>
+        <p className="text-white italic text-center py-4">No activities added yet.</p>
       ) : (
-        <ul className="list-disc list-inside text-gray-700">
+        <ul className="space-y-2">
           {activities.map(activity => (
-            <li key={activity.id} className="flex justify-between items-center py-1">
-              <span>Day {activity.day} — {activity.description}</span>
+            <li key={activity.id} className="flex justify-between items-center py-2 px-3 bg-gray-50 rounded-lg border border-gray-200">
+              <span className="text-gray-800">
+                <strong>Day {activity.day}</strong> — {activity.description}
+              </span>
               <button
                 onClick={() => deleteActivity(activity.id)}
-                className="text-red-600 hover:text-red-800 text-sm ml-2"
+                className="cursor-pointer text-red-600 hover:text-red-800 text-sm ml-2 px-2 py-1 rounded hover:bg-red-50 transition-colors"
               >
                 Delete
               </button>

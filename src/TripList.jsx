@@ -1,4 +1,3 @@
-// TripList.jsx
 import React, { useState, useEffect } from 'react';
 
 export default function TripList({ onTripSelect, refresh }) {
@@ -17,15 +16,17 @@ export default function TripList({ onTripSelect, refresh }) {
   };
 
   return (
-    <div className="bg-white shadow-md border rounded-2xl p-5 mb-6">
-      <h2 className="text-xl font-semibold mb-4 text-blue-700">Your Trips</h2>
+    <div className="bg-white shadow-md border border-gray-200 rounded-2xl p-6 mb-6">
+      <h2 className="text-2xl font-semibold mb-4 text-blue-700">
+        Your Trips
+      </h2>
       
       {trips.length === 0 ? (
-        <p className="text-gray-700 italic">No trips added yet.</p>
+        <p className="text-gray-700 italic text-center py-4">No trips added yet.</p>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-4">
           {trips.map(trip => (
-            <div key={trip.id} className="border rounded-lg p-3 hover:bg-gray-50 transition-colors">
+            <div key={trip.id} className="border border-gray-200 rounded-lg p-4 hover:bg-blue-50 transition-colors duration-200">
               <div className="flex justify-between items-start">
                 <div 
                   className="cursor-pointer flex-1"
@@ -42,9 +43,11 @@ export default function TripList({ onTripSelect, refresh }) {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    deleteTrip(trip.id);
+                    if (window.confirm('Are you sure you want to delete this trip?')) {
+                      deleteTrip(trip.id);
+                    }
                   }}
-                  className="text-red-600 hover:text-red-800 ml-2 px-2 py-1 rounded hover:bg-red-50 transition-colors"
+                  className="text-red-600 hover:text-red-800 ml-4 px-3 py-1 rounded-lg hover:bg-red-50 transition-colors duration-200 border border-red-200"
                 >
                   Delete
                 </button>
