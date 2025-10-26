@@ -14,7 +14,7 @@ export default function NavBar() {
   ];
 
   return (
-    <nav className="shadow-lg rounded-2xl mb-8 border border-gray-200">
+    <nav className="shadow-lg backdrop-blur-md rounded-2xl mb-8 border border-gray-200">
       <div className="px-4 py-4 flex items-center gap-10 justify-between">
         {/* Logo */}
         <h1 className="text-2xl font-bold text-blue-700">

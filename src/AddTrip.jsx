@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+// NEW ADDED LINE - START
+import { Bounce, Slide, ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+// NEW ADDED LINE - END
 
 export default function AddTrip({ onTripAdded }) {
   const [form, setForm] = useState({
@@ -22,18 +26,23 @@ export default function AddTrip({ onTripAdded }) {
     if (member.name.trim()) {
       setMembers(prev => [...prev, { ...member, id: Date.now() }]);
       setMember({ name: "", contact: "", email: "" });
+      // NEW ADDED LINE
+      toast.success("Member Added Successfully!");
     }
   };
 
   const removeMember = (index) => {
     setMembers(prev => prev.filter((_, i) => i !== index));
+    // NEW ADDED LINE
+    toast.success("Member Removed Successfully!");
   };
 
   const saveTrip = (e) => {
     e.preventDefault();
 
     if (!form.tripName.trim() || !form.destination.trim()) {
-      alert("Please fill in Trip Name and Destination");
+      // NEW ADDED LINE - REPLACED ALERT WITH TOAST
+      toast.error("Please fill in Trip Name and Destination");
       return;
     }
 
@@ -63,82 +72,108 @@ export default function AddTrip({ onTripAdded }) {
     setMember({ name: "", contact: "", email: "" });
 
     if (onTripAdded) onTripAdded();
-    alert("Trip saved successfully!");
-    navigate("/trips");
+    
+    // NEW ADDED LINE - REPLACED ALERT WITH TOAST
+    toast.success("Trip Saved Successfully!");
+    
+    // NEW ADDED LINE - Navigate after a short delay to show the toast
+    setTimeout(() => {
+      navigate("/trips");
+    }, 2000);
   };
 
   return (
-    <div className="min-h-screen bg-transparent from-blue-50 to-blue-100 flex items-center justify-center py-10 px-4">
-      <form className="bg-transparent backdrop-blur-md shadow-xl p-8 border border-gray-200 rounded-2xl max-w-2xl w-full" onSubmit={saveTrip}>
-        <h2 className="text-3xl font-bold mb-6 text-blue-800 text-center">✈️ Add New Trip</h2>
+    // NEW ADDED LINE - START
+    <>
+      <div className="min-h-screen bg-transparent from-blue-50 to-blue-100 flex items-center justify-center py-10 px-4">
+        <form className="bg-transparent backdrop-blur-md shadow-xl p-8 border border-gray-200 rounded-2xl max-w-2xl w-full" onSubmit={saveTrip}>
+          <h2 className="text-3xl font-bold mb-6 text-blue-800 text-center">✈️ Add New Trip</h2>
 
-        {/* Trip Info */}
-        <input type="text" placeholder="Trip Name *" className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
-          value={form.tripName} onChange={(e) => updateForm('tripName', e.target.value)} required />
-        <input type="text" placeholder="Boarding" className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
-          value={form.boarding} onChange={(e) => updateForm('boarding', e.target.value)} />
-        <input type="text" placeholder="Destination *" className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
-          value={form.destination} onChange={(e) => updateForm('destination', e.target.value)} required />
+          {/* Trip Info */}
+          <input type="text" placeholder="Trip Name *" className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
+            value={form.tripName} onChange={(e) => updateForm('tripName', e.target.value)} required />
+          <input type="text" placeholder="Boarding" className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
+            value={form.boarding} onChange={(e) => updateForm('boarding', e.target.value)} />
+          <input type="text" placeholder="Destination *" className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
+            value={form.destination} onChange={(e) => updateForm('destination', e.target.value)} required />
 
-        <div className="flex gap-3 mb-3">
-          <input type="date" className="border border-gray-300 rounded-lg p-3 w-1/2 focus:ring-2 focus:ring-blue-500"
-            value={form.startDate} onChange={(e) => updateForm('startDate', e.target.value)} />
-          <span className="text-white mt-3">→</span>
-          <input type="date" className="border border-gray-300 rounded-lg p-3 w-1/2 focus:ring-2 focus:ring-blue-500"
-            value={form.endDate} onChange={(e) => updateForm('endDate', e.target.value)} />
-        </div>
-
-        {/* Accommodation */}
-        <h3 className="text-lg font-semibold mt-6 mb-2 text-blue-700">🏨 Accommodation</h3>
-        <input type="text" placeholder="Hotel / Stay Name" className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
-          value={form.hotel} onChange={(e) => updateForm('hotel', e.target.value)} />
-        <input type="text" placeholder="Address / Location" className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
-          value={form.address} onChange={(e) => updateForm('address', e.target.value)} />
-
-        {/* Transport */}
-        <h3 className="text-lg font-semibold mt-6 mb-2 text-blue-700">🚗 Transport</h3>
-        <input type="text" placeholder="Mode of Transport (e.g., Flight, Train)" className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
-          value={form.transportMode} onChange={(e) => updateForm('transportMode', e.target.value)} />
-        <input type="text" placeholder="Transport Details (e.g., Flight No., Bus Name)" className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
-          value={form.transportDetails} onChange={(e) => updateForm('transportDetails', e.target.value)} />
-
-        {/* Members */}
-        <h3 className="text-lg font-semibold mt-6 mb-2 text-blue-700">👥 Trip Members</h3>
-        <div className="bg-transparent backdrop-blur-md border border-gray-200 p-5 rounded-xl shadow-sm">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-            <input type="text" placeholder="Member Name" className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500"
-              value={member.name} onChange={(e) => updateMember('name', e.target.value)} />
-            <input type="text" placeholder="Contact Number" className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500"
-              value={member.contact} onChange={(e) => updateMember('contact', e.target.value)} />
-            <input type="email" placeholder="Email (optional)" className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500"
-              value={member.email} onChange={(e) => updateMember('email', e.target.value)} />
+          <div className="flex gap-3 mb-3">
+            <input type="date" className="border border-gray-300 rounded-lg p-3 w-1/2 focus:ring-2 focus:ring-blue-500"
+              value={form.startDate} onChange={(e) => updateForm('startDate', e.target.value)} />
+            <span className="text-white mt-3">→</span>
+            <input type="date" className="border border-gray-300 rounded-lg p-3 w-1/2 focus:ring-2 focus:ring-blue-500"
+              value={form.endDate} onChange={(e) => updateForm('endDate', e.target.value)} />
           </div>
 
-          <button type="button" className="cursor-pointer bg-transparent border-blue-500 border-2 hover:bg-blue-700 text-white rounded-full p-3 mt-6 w-full font-semibold text-lg transition-all duration-300 shadow-md hover:shadow-xl"
-            onClick={addMember}>
-            Add Member
-          </button>
+          {/* Accommodation */}
+          <h3 className="text-lg font-semibold mt-6 mb-2 text-blue-700">🏨 Accommodation</h3>
+          <input type="text" placeholder="Hotel / Stay Name" className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
+            value={form.hotel} onChange={(e) => updateForm('hotel', e.target.value)} />
+          <input type="text" placeholder="Address / Location" className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
+            value={form.address} onChange={(e) => updateForm('address', e.target.value)} />
 
-          {members.length > 0 && (
-            <div className="space-y-2">
-              {members.map((member, index) => (
-                <div key={index} className="mt-5 flex justify-between items-center bg-transparent p-3 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-                  <span className="font-medium text-white">{member.name} - {member.contact}</span>
-                  <button type="button" className="cursor-pointer text-red-600 hover:text-red-800 hover:bg-red-100 p-1 rounded transition-colors"
-                    onClick={() => removeMember(index)}>
-                    Remove
-                  </button>
-                </div>
-              ))}
+          {/* Transport */}
+          <h3 className="text-lg font-semibold mt-6 mb-2 text-blue-700">🚗 Transport</h3>
+          <input type="text" placeholder="Mode of Transport (e.g., Flight, Train)" className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
+            value={form.transportMode} onChange={(e) => updateForm('transportMode', e.target.value)} />
+          <input type="text" placeholder="Transport Details (e.g., Flight No., Bus Name)" className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
+            value={form.transportDetails} onChange={(e) => updateForm('transportDetails', e.target.value)} />
+
+          {/* Members */}
+          <h3 className="text-lg font-semibold mt-6 mb-2 text-blue-700">👥 Trip Members</h3>
+          <div className="bg-transparent backdrop-blur-md border border-gray-200 p-5 rounded-xl shadow-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+              <input type="text" placeholder="Member Name" className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500"
+                value={member.name} onChange={(e) => updateMember('name', e.target.value)} />
+              <input type="text" placeholder="Contact Number" className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500"
+                value={member.contact} onChange={(e) => updateMember('contact', e.target.value)} />
+              <input type="email" placeholder="Email (optional)" className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500"
+                value={member.email} onChange={(e) => updateMember('email', e.target.value)} />
             </div>
-          )}
-        </div>
 
-        {/* Save Button */}
-        <button type="submit" className="cursor-pointer bg-transparent border-blue-500 border-2 hover:bg-blue-700 text-white rounded-full p-3 mt-6 w-full font-semibold text-lg transition-all duration-300 shadow-md hover:shadow-xl">
-          Save Trip
-        </button>
-      </form>
-    </div>
+            <button type="button" className="cursor-pointer bg-transparent border-blue-500 border-2 hover:bg-blue-700 text-white rounded-full p-3 mt-6 w-full font-semibold text-lg transition-all duration-300 shadow-md hover:shadow-xl"
+              onClick={addMember}>
+              Add Member
+            </button>
+
+            {members.length > 0 && (
+              <div className="space-y-2">
+                {members.map((member, index) => (
+                  <div key={index} className="mt-5 flex justify-between items-center bg-transparent p-3 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                    <span className="font-medium text-white">{member.name} - {member.contact}</span>
+                    <button type="button" className="cursor-pointer text-red-600 hover:text-red-800 hover:bg-red-100 p-1 rounded transition-colors"
+                      onClick={() => removeMember(index)}>
+                      Remove
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Save Button */}
+          <button type="submit" className="cursor-pointer bg-transparent border-blue-500 border-2 hover:bg-blue-700 text-white rounded-full p-3 mt-6 w-full font-semibold text-lg transition-all duration-300 shadow-md hover:shadow-xl">
+            Save Trip
+          </button>
+        </form>
+      </div>
+      
+      {/* NEW ADDED LINE - START */}
+      <ToastContainer 
+        position="top-right"
+        autoClose={2000}
+        transition={Slide}
+        theme="dark"
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+      {/* NEW ADDED LINE - END */}
+    </>
+    // NEW ADDED LINE - END
   );
 }

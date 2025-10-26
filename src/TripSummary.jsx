@@ -22,7 +22,7 @@ export default function TripSummary({ selectedTrip }) {
   }
 
   return (
-    <div className="bg-transparent shadow-md border border-gray-200 rounded-2xl p-6 mb-6">
+    <div className="bg-transparent backdrop-blur-md shadow-md border border-gray-200 rounded-2xl p-6 mb-6">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-semibold text-blue-700">
           Trip Summary
