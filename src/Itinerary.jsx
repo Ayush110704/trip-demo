@@ -64,7 +64,7 @@ export default function Itinerary({ selectedTrip }) {
   }
 
   return (
-    <div className="bg- shadow-md border border-gray-200 rounded-2xl p-6 mb-6">
+    <div className="bg-transparent shadow-md border border-gray-200 rounded-2xl p-6 mb-6">
       <h2 className="text-2xl font-semibold mb-4 text-blue-700">
         Itinerary - {selectedTrip.name}
       </h2>
@@ -97,8 +97,8 @@ export default function Itinerary({ selectedTrip }) {
       ) : (
         <ul className="space-y-2">
           {activities.map(activity => (
-            <li key={activity.id} className="flex justify-between items-center py-2 px-3 bg-gray-50 rounded-lg border border-gray-200">
-              <span className="text-gray-800">
+            <li key={activity.id} className="flex justify-between items-center py-2 px-3 bg-transparent rounded-lg border border-gray-200">
+              <span className="text-white ">
                 <strong>Day {activity.day}</strong> — {activity.description}
               </span>
               <div className="flex gap-2">
