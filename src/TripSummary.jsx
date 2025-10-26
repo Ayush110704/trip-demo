@@ -1,6 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function TripSummary({ selectedTrip }) {
+  const navigate = useNavigate();
+
   if (!selectedTrip) {
     return (
       <div className="bg-transparent shadow-md border border-gray-200 rounded-2xl p-6 mb-6">
@@ -8,15 +11,29 @@ export default function TripSummary({ selectedTrip }) {
           Trip Summary
         </h2>
         <p className="text-white italic text-center py-4">Select a trip to view details</p>
+        <button
+          onClick={() => navigate('/trips')}
+          className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-6 py-3 font-semibold transition-all duration-200 shadow-md hover:shadow-lg mx-auto block"
+        >
+          ← Back to Trips
+        </button>
       </div>
     );
   }
 
   return (
     <div className="bg-transparent shadow-md border border-gray-200 rounded-2xl p-6 mb-6">
-      <h2 className="text-2xl font-semibold mb-4 text-blue-700">
-        Trip Summary
-      </h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-semibold text-blue-700">
+          Trip Summary
+        </h2>
+        <button
+          onClick={() => navigate('/trips')}
+          className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 font-semibold transition-all duration-200 shadow-md hover:shadow-lg"
+        >
+          ← Back to Trips
+        </button>
+      </div>
 
       <div className="space-y-3">
         <p><strong className="text-white">Boarding:</strong> <span className="text-white">{selectedTrip.boarding || 'Not specified'}</span></p>

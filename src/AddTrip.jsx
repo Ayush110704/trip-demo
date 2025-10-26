@@ -1,64 +1,52 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function AddTrip({ onTripAdded }) {
-  const [tripName, setTripName] = useState("");
-  const [boarding, setBoarding] = useState("");
-  const [destination, setDestination] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [hotel, setHotel] = useState("");
-  const [address, setAddress] = useState("");
-  const [transportMode, setTransportMode] = useState("");
-  const [transportDetails, setTransportDetails] = useState("");
+  const [form, setForm] = useState({
+    tripName: "", boarding: "", destination: "", startDate: "", endDate: "",
+    hotel: "", address: "", transportMode: "", transportDetails: ""
+  });
   const [members, setMembers] = useState([]);
-  const [memberName, setMemberName] = useState("");
-  const [memberContact, setMemberContact] = useState("");
-  const [memberEmail, setMemberEmail] = useState("");
+  const [member, setMember] = useState({ name: "", contact: "", email: "" });
+  const navigate = useNavigate();
+
+  const updateForm = (field, value) => {
+    setForm(prev => ({ ...prev, [field]: value }));
+  };
+
+  const updateMember = (field, value) => {
+    setMember(prev => ({ ...prev, [field]: value }));
+  };
 
   const addMember = () => {
-    if (memberName.trim()) {
-      const newMember = {
-        name: memberName,
-        contact: memberContact,
-        email: memberEmail,
-        id: Date.now(),
-      };
-      setMembers([...members, newMember]);
-      setMemberName("");
-      setMemberContact("");
-      setMemberEmail("");
+    if (member.name.trim()) {
+      setMembers(prev => [...prev, { ...member, id: Date.now() }]);
+      setMember({ name: "", contact: "", email: "" });
     }
   };
 
   const removeMember = (index) => {
-    setMembers(members.filter((_, i) => i !== index));
+    setMembers(prev => prev.filter((_, i) => i !== index));
   };
 
   const saveTrip = (e) => {
     e.preventDefault();
 
-    if (!tripName.trim() || !destination.trim()) {
+    if (!form.tripName.trim() || !form.destination.trim()) {
       alert("Please fill in Trip Name and Destination");
       return;
     }
 
     const trips = JSON.parse(localStorage.getItem("trips") || "[]");
-
     const newTrip = {
       id: Date.now(),
-      name: tripName,
-      boarding,
-      destination,
-      startDate,
-      endDate,
-      accommodation: {
-        hotel,
-        address,
-      },
-      transport: {
-        mode: transportMode,
-        details: transportDetails,
-      },
+      name: form.tripName,
+      boarding: form.boarding,
+      destination: form.destination,
+      startDate: form.startDate,
+      endDate: form.endDate,
+      accommodation: { hotel: form.hotel, address: form.address },
+      transport: { mode: form.transportMode, details: form.transportDetails },
       members,
       createdAt: new Date().toISOString(),
     };
@@ -66,164 +54,78 @@ export default function AddTrip({ onTripAdded }) {
     trips.push(newTrip);
     localStorage.setItem("trips", JSON.stringify(trips));
 
-    // reset form
-    setTripName("");
-    setBoarding("");
-    setDestination("");
-    setStartDate("");
-    setEndDate("");
-    setHotel("");
-    setAddress("");
-    setTransportMode("");
-    setTransportDetails("");
+    // Reset form and navigate
+    setForm({
+      tripName: "", boarding: "", destination: "", startDate: "", endDate: "",
+      hotel: "", address: "", transportMode: "", transportDetails: ""
+    });
     setMembers([]);
+    setMember({ name: "", contact: "", email: "" });
 
     if (onTripAdded) onTripAdded();
-
     alert("Trip saved successfully!");
+    navigate("/trips");
   };
 
   return (
     <div className="min-h-screen bg-transparent from-blue-50 to-blue-100 flex items-center justify-center py-10 px-4">
-      <form
-        className="bg-transparent backdrop-blur-md shadow-xl p-8 border border-gray-200 rounded-2xl max-w-2xl w-full"
-        onSubmit={saveTrip}
-      >
-        <h2 className="text-3xl font-bold mb-6 text-blue-800 text-center">
-          ✈️ Add New Trip
-        </h2>
+      <form className="bg-transparent backdrop-blur-md shadow-xl p-8 border border-gray-200 rounded-2xl max-w-2xl w-full" onSubmit={saveTrip}>
+        <h2 className="text-3xl font-bold mb-6 text-blue-800 text-center">✈️ Add New Trip</h2>
 
         {/* Trip Info */}
-        <input
-          type="text"
-          placeholder="Trip Name *"
-          className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
-          value={tripName}
-          onChange={(e) => setTripName(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Boarding"
-          className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
-          value={boarding}
-          onChange={(e) => setBoarding(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Destination *"
-          className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
-          value={destination}
-          onChange={(e) => setDestination(e.target.value)}
-          required
-        />
+        <input type="text" placeholder="Trip Name *" className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
+          value={form.tripName} onChange={(e) => updateForm('tripName', e.target.value)} required />
+        <input type="text" placeholder="Boarding" className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
+          value={form.boarding} onChange={(e) => updateForm('boarding', e.target.value)} />
+        <input type="text" placeholder="Destination *" className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
+          value={form.destination} onChange={(e) => updateForm('destination', e.target.value)} required />
 
         <div className="flex gap-3 mb-3">
-          <input
-            type="date"
-            className="border border-gray-300 rounded-lg p-3 w-1/2 focus:ring-2 focus:ring-blue-500"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-          />
+          <input type="date" className="border border-gray-300 rounded-lg p-3 w-1/2 focus:ring-2 focus:ring-blue-500"
+            value={form.startDate} onChange={(e) => updateForm('startDate', e.target.value)} />
           <span className="text-white mt-3">→</span>
-          <input
-            type="date"
-            className="border border-gray-300 rounded-lg p-3 w-1/2 focus:ring-2 focus:ring-blue-500"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-          />
+          <input type="date" className="border border-gray-300 rounded-lg p-3 w-1/2 focus:ring-2 focus:ring-blue-500"
+            value={form.endDate} onChange={(e) => updateForm('endDate', e.target.value)} />
         </div>
 
         {/* Accommodation */}
-        <h3 className="text-lg font-semibold mt-6 mb-2 text-blue-700">
-          🏨 Accommodation
-        </h3>
-        <input
-          type="text"
-          placeholder="Hotel / Stay Name"
-          className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
-          value={hotel}
-          onChange={(e) => setHotel(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Address / Location"
-          className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-        />
+        <h3 className="text-lg font-semibold mt-6 mb-2 text-blue-700">🏨 Accommodation</h3>
+        <input type="text" placeholder="Hotel / Stay Name" className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
+          value={form.hotel} onChange={(e) => updateForm('hotel', e.target.value)} />
+        <input type="text" placeholder="Address / Location" className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
+          value={form.address} onChange={(e) => updateForm('address', e.target.value)} />
 
         {/* Transport */}
-        <h3 className="text-lg font-semibold mt-6 mb-2 text-blue-700">
-          🚗 Transport
-        </h3>
-        <input
-          type="text"
-          placeholder="Mode of Transport (e.g., Flight, Train)"
-          className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
-          value={transportMode}
-          onChange={(e) => setTransportMode(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Transport Details (e.g., Flight No., Bus Name)"
-          className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
-          value={transportDetails}
-          onChange={(e) => setTransportDetails(e.target.value)}
-        />
+        <h3 className="text-lg font-semibold mt-6 mb-2 text-blue-700">🚗 Transport</h3>
+        <input type="text" placeholder="Mode of Transport (e.g., Flight, Train)" className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
+          value={form.transportMode} onChange={(e) => updateForm('transportMode', e.target.value)} />
+        <input type="text" placeholder="Transport Details (e.g., Flight No., Bus Name)" className="border border-gray-300 rounded-lg p-3 w-full mb-3 focus:ring-2 focus:ring-blue-500"
+          value={form.transportDetails} onChange={(e) => updateForm('transportDetails', e.target.value)} />
 
         {/* Members */}
-        <h3 className="text-lg font-semibold mt-6 mb-2 text-blue-700">
-          👥 Trip Members
-        </h3>
+        <h3 className="text-lg font-semibold mt-6 mb-2 text-blue-700">👥 Trip Members</h3>
         <div className="bg-transparent backdrop-blur-md border border-gray-200 p-5 rounded-xl shadow-sm">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-            <input
-              type="text"
-              placeholder="Member Name"
-              className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500"
-              value={memberName}
-              onChange={(e) => setMemberName(e.target.value)}
-            />
-            <input
-              type="text"
-              placeholder="Contact Number"
-              className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500"
-              value={memberContact}
-              onChange={(e) => setMemberContact(e.target.value)}
-            />
-            <input
-              type="email"
-              placeholder="Email (optional)"
-              className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500"
-              value={memberEmail}
-              onChange={(e) => setMemberEmail(e.target.value)}
-            />
+            <input type="text" placeholder="Member Name" className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500"
+              value={member.name} onChange={(e) => updateMember('name', e.target.value)} />
+            <input type="text" placeholder="Contact Number" className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500"
+              value={member.contact} onChange={(e) => updateMember('contact', e.target.value)} />
+            <input type="email" placeholder="Email (optional)" className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500"
+              value={member.email} onChange={(e) => updateMember('email', e.target.value)} />
           </div>
 
-          <button
-            type="button"
-            className=" cursor-pointer bg-transparent border-blue-500 border-2  hover:bg-blue-700 text-white rounded-full p-3 mt-6 w-full font-semibold text-lg transition-all duration-300 shadow-md hover:shadow-xl"
-            onClick={addMember}
-          >
+          <button type="button" className="cursor-pointer bg-transparent border-blue-500 border-2 hover:bg-blue-700 text-white rounded-full p-3 mt-6 w-full font-semibold text-lg transition-all duration-300 shadow-md hover:shadow-xl"
+            onClick={addMember}>
             Add Member
           </button>
 
           {members.length > 0 && (
             <div className="space-y-2">
               {members.map((member, index) => (
-                <div
-                  key={index}
-                  className="mt-5  flex justify-between items-center bg-transparent p-3 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
-                >
-                  <span className="font-medium text-white">
-                    {member.name} - {member.contact}
-                  </span>
-                  <button
-                    type="button"
-                    className="cursor-pointer text-red-600 hover:text-red-800 hover:bg-red-100 p-1 rounded transition-colors"
-                    onClick={() => removeMember(index)}
-                  >
+                <div key={index} className="mt-5 flex justify-between items-center bg-transparent p-3 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                  <span className="font-medium text-white">{member.name} - {member.contact}</span>
+                  <button type="button" className="cursor-pointer text-red-600 hover:text-red-800 hover:bg-red-100 p-1 rounded transition-colors"
+                    onClick={() => removeMember(index)}>
                     Remove
                   </button>
                 </div>
@@ -233,11 +135,8 @@ export default function AddTrip({ onTripAdded }) {
         </div>
 
         {/* Save Button */}
-        <button
-          type="submit"
-          className="cursor-pointer bg-transparent border-blue-500 border-2  hover:bg-blue-700 text-white rounded-full p-3 mt-6 w-full font-semibold text-lg transition-all duration-300 shadow-md hover:shadow-xl"
-        >
-           Save Trip
+        <button type="submit" className="cursor-pointer bg-transparent border-blue-500 border-2 hover:bg-blue-700 text-white rounded-full p-3 mt-6 w-full font-semibold text-lg transition-all duration-300 shadow-md hover:shadow-xl">
+          Save Trip
         </button>
       </form>
     </div>

@@ -4,6 +4,7 @@ export default function Itinerary({ selectedTrip }) {
   const [activities, setActivities] = useState([]);
   const [day, setDay] = useState('');
   const [description, setDescription] = useState('');
+  const [editingActivity, setEditingActivity] = useState(null);
 
   useEffect(() => {
     if (selectedTrip) {
@@ -12,6 +13,7 @@ export default function Itinerary({ selectedTrip }) {
     } else {
       setActivities([]);
     }
+    setEditingActivity(null);
   }, [selectedTrip]);
 
   const addActivity = () => {
@@ -29,6 +31,25 @@ export default function Itinerary({ selectedTrip }) {
     const updatedActivities = activities.filter(activity => activity.id !== activityId);
     setActivities(updatedActivities);
     localStorage.setItem(`itinerary_${selectedTrip.id}`, JSON.stringify(updatedActivities));
+  };
+
+  const startEditing = (activity) => {
+    setEditingActivity(activity);
+    setDay(activity.day);
+    setDescription(activity.description);
+  };
+
+  const saveEditedActivity = () => {
+    if (day.trim() && description.trim() && selectedTrip && editingActivity) {
+      const updatedActivities = activities.map(activity =>
+        activity.id === editingActivity.id ? { ...activity, day, description } : activity
+      );
+      setActivities(updatedActivities);
+      localStorage.setItem(`itinerary_${selectedTrip.id}`, JSON.stringify(updatedActivities));
+      setEditingActivity(null);
+      setDay('');
+      setDescription('');
+    }
   };
 
   if (!selectedTrip) {
@@ -50,8 +71,8 @@ export default function Itinerary({ selectedTrip }) {
 
       <div className="flex flex-col sm:flex-row gap-3 mb-4">
         <input 
-          type ="text" 
-          placeholder ="Day"
+          type="text" 
+          placeholder="Day"
           className="text-white border border-gray-300 rounded-lg p-3 sm:w-1/4 focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
           value={day}
           onChange={(e) => setDay(e.target.value)}
@@ -65,9 +86,9 @@ export default function Itinerary({ selectedTrip }) {
         />
         <button 
           className="cursor-pointer bg-green-600 hover:bg-green-700 text-white rounded-lg px-6 py-3 font-semibold transition-all duration-200 shadow-md hover:shadow-lg"
-          onClick={addActivity}
+          onClick={editingActivity ? saveEditedActivity : addActivity}
         >
-          Add
+          {editingActivity ? 'Save' : 'Add'}
         </button>
       </div>
 
@@ -80,12 +101,20 @@ export default function Itinerary({ selectedTrip }) {
               <span className="text-gray-800">
                 <strong>Day {activity.day}</strong> — {activity.description}
               </span>
-              <button
-                onClick={() => deleteActivity(activity.id)}
-                className="cursor-pointer text-red-600 hover:text-red-800 text-sm ml-2 px-2 py-1 rounded hover:bg-red-50 transition-colors"
-              >
-                Delete
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => startEditing(activity)}
+                  className="cursor-pointer text-blue-600 hover:text-blue-800 text-sm px-2 py-1 rounded hover:bg-blue-50 transition-colors border border-blue-200"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => deleteActivity(activity.id)}
+                  className="cursor-pointer text-red-600 hover:text-red-800 text-sm px-2 py-1 rounded hover:bg-red-50 transition-colors border border-red-200"
+                >
+                  Delete
+                </button>
+              </div>
             </li>
           ))}
         </ul>

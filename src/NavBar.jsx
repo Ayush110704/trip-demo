@@ -7,7 +7,7 @@ export default function NavBar() {
   const toggleMenu = () => setIsOpen(!isOpen);
 
   const navItems = [
-    { path: '/add-trip', label: 'Add Trip' },
+    { path: '/add-trip', label: 'Home' },
     { path: '/trips', label: 'Your Trips' },
     { path: '/summary', label: 'Trip Summary' },
     { path: '/itinerary', label: 'Itinerary' },
