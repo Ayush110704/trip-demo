@@ -45,7 +45,7 @@ export default function NavBar() {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden bg-gray-200 shadow-lg rounded-b-xl">
+        <div className="md:hidden bg-transparent shadow-lg rounded-b-xl">
           <ul className="flex flex-col items-center py-4 space-y-4 text-md text-white">
             {navItems.map((item) => (
               <li key={item.path}>

@@ -78,50 +78,50 @@ export default function TripList({ onTripSelect, refresh }) {
   };
 
   return (
-    <div className="bg-white shadow-md border border-gray-200 rounded-2xl p-6 mb-6">
+    <div className="bg-transparent shadow-md border border-gray-200 rounded-2xl p-6 mb-6">
       <h2 className="text-2xl font-semibold mb-4 text-blue-700">Your Trips</h2>
       
       {trips.length === 0 ? (
-        <p className="text-gray-700 italic text-center py-4">No trips added yet.</p>
+        <p className="text-white italic text-center py-4">No trips added yet.</p>
       ) : (
         <div className="space-y-4">
           {trips.map(trip => (
-            <div key={trip.id} className="border border-gray-200 rounded-lg p-4 hover:bg-blue-50 transition-colors duration-200">
+            <div key={trip.id} className="border border-white rounded-lg p-4 transition-colors duration-200">
               {editingTrip && editingTrip.id === trip.id ? (
                 // Edit Mode - Compact
                 <div className="space-y-3">
                   {/* Basic Info */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    <input type="text" value={editingTrip.name} onChange={(e) => handleEditChange('name', e.target.value)} className="border border-gray-300 rounded-lg p-2" placeholder="Trip Name *" required />
-                    <input type="text" value={editingTrip.boarding} onChange={(e) => handleEditChange('boarding', e.target.value)} className="border border-gray-300 rounded-lg p-2" placeholder="Boarding" />
+                    <input type="text" value={editingTrip.name} onChange={(e) => handleEditChange('name', e.target.value)} className="border border-gray-300 text-white rounded-lg p-2" placeholder="Trip Name *" required />
+                    <input type="text" value={editingTrip.boarding} onChange={(e) => handleEditChange('boarding', e.target.value)} className="border border-gray-300 text-white rounded-lg p-2" placeholder="Boarding" />
                   </div>
-                  <input type="text" value={editingTrip.destination} onChange={(e) => handleEditChange('destination', e.target.value)} className="border border-gray-300 rounded-lg p-2 w-full" placeholder="Destination *" required />
+                  <input type="text" value={editingTrip.destination} onChange={(e) => handleEditChange('destination', e.target.value)} className="border border-gray-300 text-white rounded-lg p-2 w-full" placeholder="Destination *" required />
                   
                   {/* Dates with arrow */}
                   <div className="flex items-center gap-2">
-                    <input type="date" value={editingTrip.startDate} onChange={(e) => handleEditChange('startDate', e.target.value)} className="border border-gray-300 rounded-lg p-2 flex-1" />
+                    <input type="date" value={editingTrip.startDate} onChange={(e) => handleEditChange('startDate', e.target.value)} className="border border-gray-300 text-white rounded-lg p-2 flex-1" />
                     <span className="text-gray-500">→</span>
-                    <input type="date" value={editingTrip.endDate} onChange={(e) => handleEditChange('endDate', e.target.value)} className="border border-gray-300 rounded-lg p-2 flex-1" />
+                    <input type="date" value={editingTrip.endDate} onChange={(e) => handleEditChange('endDate', e.target.value)} className="border border-gray-300 text-white rounded-lg p-2 flex-1" />
                   </div>
 
                   {/* Accommodation & Transport */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    <input type="text" value={editingTrip.accommodation?.hotel || ''} onChange={(e) => handleNestedEditChange('accommodation', 'hotel', e.target.value)} className="border border-gray-300 rounded-lg p-2" placeholder="Hotel" />
-                    <input type="text" value={editingTrip.accommodation?.address || ''} onChange={(e) => handleNestedEditChange('accommodation', 'address', e.target.value)} className="border border-gray-300 rounded-lg p-2" placeholder="Address" />
+                    <input type="text" value={editingTrip.accommodation?.hotel || ''} onChange={(e) => handleNestedEditChange('accommodation', 'hotel', e.target.value)} className="border border-gray-30 text-white rounded-lg p-2" placeholder="Hotel" />
+                    <input type="text" value={editingTrip.accommodation?.address || ''} onChange={(e) => handleNestedEditChange('accommodation', 'address', e.target.value)} className="border border-gray-300 text-white rounded-lg p-2" placeholder="Address" />
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    <input type="text" value={editingTrip.transport?.mode || ''} onChange={(e) => handleNestedEditChange('transport', 'mode', e.target.value)} className="border border-gray-300 rounded-lg p-2" placeholder="Transport Mode" />
-                    <input type="text" value={editingTrip.transport?.details || ''} onChange={(e) => handleNestedEditChange('transport', 'details', e.target.value)} className="border border-gray-300 rounded-lg p-2" placeholder="Transport Details" />
+                    <input type="text" value={editingTrip.transport?.mode || ''} onChange={(e) => handleNestedEditChange('transport', 'mode', e.target.value)} className="border border-gray-300 text-white rounded-lg p-2" placeholder="Transport Mode" />
+                    <input type="text" value={editingTrip.transport?.details || ''} onChange={(e) => handleNestedEditChange('transport', 'details', e.target.value)} className="border border-gray-300 text-white rounded-lg p-2" placeholder="Transport Details" />
                   </div>
 
                   {/* Members Section */}
                   <div className="border-t pt-3">
                     <p className="font-semibold text-blue-600 mb-2">Trip Members:</p>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mb-2">
-                      <input type="text" placeholder="Name" value={newMember.name} onChange={(e) => setNewMember(prev => ({...prev, name: e.target.value}))} className="border border-gray-300 rounded-lg p-2" />
-                      <input type="text" placeholder="Contact" value={newMember.contact} onChange={(e) => setNewMember(prev => ({...prev, contact: e.target.value}))} className="border border-gray-300 rounded-lg p-2" />
-                      <input type="email" placeholder="Email" value={newMember.email} onChange={(e) => setNewMember(prev => ({...prev, email: e.target.value}))} className="border border-gray-300 rounded-lg p-2" />
+                      <input type="text" placeholder="Name" value={newMember.name} onChange={(e) => setNewMember(prev => ({...prev, name: e.target.value}))} className="border border-gray-300 text-white rounded-lg p-2" />
+                      <input type="text" placeholder="Contact" value={newMember.contact} onChange={(e) => setNewMember(prev => ({...prev, contact: e.target.value}))} className="border border-gray-300 text-white rounded-lg p-2" />
+                      <input type="email" placeholder="Email" value={newMember.email} onChange={(e) => setNewMember(prev => ({...prev, email: e.target.value}))} className="border border-gray-300 text-white rounded-lg p-2" />
                     </div>
                     <button onClick={addEditMember} className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 mb-3 w-full">Add Member</button>
                     
@@ -142,9 +142,9 @@ export default function TripList({ onTripSelect, refresh }) {
                     className="cursor-pointer flex-1" 
                     onClick={() => handleTripClick(trip)}
                   >
-                    <h3 className="font-semibold text-lg text-gray-800">{trip.name || 'Unnamed Trip'}</h3>
-                    <p className="text-gray-600">{trip.boarding && `${trip.boarding} → `}{trip.destination}</p>
-                    <p className="text-sm text-gray-500">{trip.startDate} {trip.endDate && `→ ${trip.endDate}`}</p>
+                    <h3 className="font-semibold text-lg text-white">{trip.name || 'Unnamed Trip'}</h3>
+                    <p className="text-white">{trip.boarding && `${trip.boarding} → `}{trip.destination}</p>
+                    <p className="text-sm text-white">{trip.startDate} {trip.endDate && `→ ${trip.endDate}`}</p>
                   </div>
                   <div className="flex gap-2 ml-4">
                     <button onClick={(e) => { e.stopPropagation(); startEditing(trip); }} className="text-blue-600 hover:text-blue-800 px-3 py-1 rounded-lg hover:bg-blue-50 transition-colors duration-200 border border-blue-200">Edit</button>

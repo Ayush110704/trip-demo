@@ -36,7 +36,6 @@ export default function TripSummary({ selectedTrip }) {
       </div>
 
       <div className="space-y-3">
-        
         <p><strong className="text-white">Name:</strong> <span className="text-white">{selectedTrip.name}</span></p>
         <p><strong className="text-white">Boarding:</strong> <span className="text-white">{selectedTrip.boarding || 'Not specified'}</span></p>
         <p><strong className="text-white">Destination:</strong> <span className="text-white">{selectedTrip.destination}</span></p>
